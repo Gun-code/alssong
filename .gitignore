@@ -1,0 +1,37 @@
+# Python 캐시 및 컴파일된 파일
+__pycache__/
+*.pyc
+*.pyo
+
+# 가상환경 디렉토리 및 환경 변수 파일
+venv/
+.env/
+
+# 로그 및 임시 파일
+*.log
+*.tmp
+
+# 빌드 및 배포 디렉토리/파일
+build/
+dist/
+*.egg-info/
+
+# IDE/편집기 설정 디렉토리 및 시스템 메타파일
+.vscode/
+.idea/
+.DS_Store  # macOS 사용자용
+Thumbs.db  # Windows 사용자용
+
+# 데이터셋 및 모델 관련 (머신러닝/딥러닝 프로젝트)
+data/
+datasets/
+models/
+*.h5
+*.pth
+
+# Jupyter Notebook 체크포인트 디렉토리 
+.ipynb_checkpoints/
+
+# TensorFlow 체크포인트 및 로그 디렉토리 
+checkpoint/
+logs/
