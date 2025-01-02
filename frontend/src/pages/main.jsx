@@ -6,6 +6,7 @@ import GuideIcon from '../images/guide.png';
 import CameraIcon from '../images/Cam.png';
 import AlbumIcon from '../images/elbum.png';
 import MainBar from '../images/MAIN-BAR.png';
+import { Link } from 'react-router-dom';
 
 function MainPage() {
     return (
@@ -20,15 +21,16 @@ function MainPage() {
                         </select>
                     </div>
                     <img src={Logo} alt="logo" className="Logo" />
+                    <div className="black-box"></div>
                     <img src={MainBack} alt="background" className="background" />
                 </div>
             </div>
-            {/* ------------------------------------------------------------------------------------- */}
-            <div className="underBar-container">               
+            {/* ------------------------------------------------------------------------------------------------- */}
+            <div className="underBar-container">
                 <div className="underBar-item">
-                    <img src={GuideIcon} alt="guide" className="under-item" />
-                    <img src={CameraIcon} alt="Camera" className="under-item" />
-                    <img src={AlbumIcon} alt="album" className="under-item" />
+                    <Link to="./guide.jsx"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
+                    <Link to="./camera.jsx"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
+                    <Link to="./album.jsx"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
                 </div>
                 <img src={MainBar} alt="MainBar" className="underbar" />
             </div>
