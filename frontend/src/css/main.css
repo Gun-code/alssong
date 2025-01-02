@@ -27,7 +27,7 @@
     height: 100%;
     z-index: 1;
     object-fit: cover;
-    background-color: rgba(0 ,0 ,0, 0.5);
+    filter: brightness(60%);  /* 70%는 조절 가능 (0% ~ 100%) */
 }
 
 .Logo {

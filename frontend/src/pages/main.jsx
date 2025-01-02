@@ -21,7 +21,6 @@ function MainPage() {
                         </select>
                     </div>
                     <img src={Logo} alt="logo" className="Logo" />
-                    <div className="black-box"></div>
                     <img src={MainBack} alt="background" className="background" />
                 </div>
             </div>
@@ -30,7 +29,7 @@ function MainPage() {
                 <div className="underBar-item">
                     <Link to="./guide.jsx"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
                     <Link to="./camera.jsx"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
-                    <Link to="./album.jsx"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
+                    <Link to="./card.jsx"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
                 </div>
                 <img src={MainBar} alt="MainBar" className="underbar" />
             </div>
