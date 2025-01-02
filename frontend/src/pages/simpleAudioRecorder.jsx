@@ -19,12 +19,12 @@ const SimpleAudioRecorder = ({ onStop }) => {
 
       mediaRecorderRef.current.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        const url = URL.createObjectURL(audioBlob);
         onStop(audioBlob); // 부모에게 오디오 데이터 전달
         audioChunksRef.current = [];
       };
     } catch (error) {
       console.error('녹음 시작 실패:', error);
+      alert('오디오 녹음을 시작할 수 없습니다. 마이크 접근을 허용해주세요.');
     }
   };
 
