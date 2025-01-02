@@ -14,12 +14,25 @@ import recordIcon from '../images/record.svg';
 // SimpleAudioRecorder 임포트
 import SimpleAudioRecorder from './simpleAudioRecorder';
 
+// 모달 임포트
+import Modal from './modal';
+
 const Card = () => {
   const navigate = useNavigate();
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewURL, setPreviewURL] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
+
+  // 모달 ==================================================
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   // 이미지 선택 핸들러
   const handleImageChange = (e) => {
@@ -143,12 +156,15 @@ const Card = () => {
       {/* 결과 컨테이너 */}
       <div className="result-container">
         <span>알쏭달쏭</span> {/* response text data(Kor) */}
-        <button className="record-btn">
-          <img src={recordIcon} alt="마이크" />
-          녹음
-        </button>
+        <img src={recordIcon} alt="마이크" onClick={openModal} className='record-icon'/>
         <span>RSSONG</span> {/* response text data(eng/jp/ch) */}
       </div>
+
+      {/* Modal 컴포넌트 */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </div>
   );
 };

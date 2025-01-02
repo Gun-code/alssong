@@ -27,9 +27,9 @@ function MainPage() {
             {/* ------------------------------------------------------------------------------------------------- */}
             <div className="underBar-container">
                 <div className="underBar-item">
-                    <Link to="./guide.jsx"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
-                    <Link to="./camera.jsx"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
-                    <Link to="./card.jsx"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
+                    <Link to="/guide"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
+                    <Link to="/camera"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
+                    <Link to="/card"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
                 </div>
                 <img src={MainBar} alt="MainBar" className="underbar" />
             </div>
