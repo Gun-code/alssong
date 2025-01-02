@@ -16,6 +16,9 @@ import recordIcon from '../images/record.svg';
 // SimpleAudioRecorder 임포트
 import SimpleAudioRecorder from '../pages/simpleAudioRecorder';
 
+// 모달 임포트
+import Modal from './modal';
+
 const Card = () => {
   const location = useLocation();
   const webcamRef = useRef(null);
@@ -47,7 +50,20 @@ const Card = () => {
     }
   }, [location.state, isMobile]);
 
+
+  // 모달 ==================================================
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
   // 이미지 선택 핸들러 (Card에서 직접 업로드 시)
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -190,13 +206,18 @@ const Card = () => {
 
       {/* 녹음 버튼 */}
       <div className="result-container">
-        <span>알쏭달쏭</span>
-        <button className="record-btn" onClick={openAudioModal}>
-          <img src={recordIcon} alt="마이크" />
-          녹음
-        </button>
-        <span>RSSONG</span>
+        
+
+        <span>알쏭달쏭</span> {/* response text data(Kor) */}
+        <img src={recordIcon} alt="마이크" onClick={openModal} className='record-icon'/>
+        <span>RSSONG</span> {/* response text data(eng/jp/ch) */}
       </div>
+
+      {/* Modal 컴포넌트 */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
 
       {/* 오디오 녹음 모달 */}
       {isAudioModalOpen && (

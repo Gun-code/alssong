@@ -1,10 +1,16 @@
-/* card.css */
 
-html, body {
-  margin: 0;
-  padding: 0;
+html,
+body {
+  height: 834px;
+  width: 1194px;
+  display: flex;
+  flex-direction: column;
+
   font-family: 'Roboto', sans-serif;
   background-color: #FCF3D4;
+  touch-action: none;
+  /* 모바일에서 스크롤 방지 */
+  position: fixed;
 }
 
 .home-icon {
@@ -35,6 +41,7 @@ html, body {
   position: absolute;
   bottom: 10px;
   right: 10px;
+
 }
 
 .retake-btn {
@@ -42,6 +49,8 @@ html, body {
   align-items: center;
   padding: 5px 10px;
   background-color: white;
+  /* 반투명 검은색 배경 */
+
   color: black;
   border: none;
   border-radius: 5px;
@@ -53,6 +62,7 @@ html, body {
   height: auto;
   margin-right: 5px;
 }
+
 
 .upload-btn {
   display: block;
@@ -105,6 +115,12 @@ html, body {
   border-radius: 40px;
   border: 5px solid black;
   color: black;
+}
+
+
+.record-icon:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 .record-btn {

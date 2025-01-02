@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Main from './pages/main.jsx';
-import Card from '../src/pages/card.jsx';
+import Card from './pages/card.jsx';
 
 
 function App() {

@@ -1,10 +1,12 @@
 .page {
-    height: 1024px;
-    width: 1366px;
+    height: 834px;
+    width: 1194px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     background-color: white;
+    touch-action: none;  /* 모바일에서 스크롤 방지 */
+    position: fixed;
 }
 
 .main {

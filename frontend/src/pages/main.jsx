@@ -11,6 +11,31 @@ import { Link, useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 
 function MainPage() {
+    return (
+        <div className="page">
+            <div className="main">
+                <div className="background-container">
+                    <div className="language-selector">
+                        <select id="language">
+                            <option value="en">English</option>
+                            <option value="ch">中文</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                    <img src={Logo} alt="logo" className="Logo" />
+                    <img src={MainBack} alt="background" className="background" />
+                </div>
+            </div>
+            {/* ------------------------------------------------------------------------------------------------- */}
+            <div className="underBar-container">
+                <div className="underBar-item">
+                    <Link to="/guide"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
+                    <Link to="/camera"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
+                    <Link to="/card"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
+                </div>
+                <img src={MainBar} alt="MainBar" className="underbar" />
+            </div>
+=======
   const navigate = useNavigate();
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const fileInputRef = useRef(null);
@@ -47,6 +72,7 @@ function MainPage() {
           </div>
           <img src={Logo} alt="logo" className="Logo" />
           <img src={MainBack} alt="background" className="background" />
+
         </div>
       </div>
       {/* ------------------------------------------------------------------------------------------------- */}
