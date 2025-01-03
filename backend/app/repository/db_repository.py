@@ -14,18 +14,18 @@ class DBRepository:
         return str(result.inserted_id)
     
 
-    async def get_item_by_name(self, collection: str, item_id: str) -> dict:
+    async def get_item_by_word(self, collection: str, word: str) -> dict:
         """
-        ID를 기준으로 MongoDB에서 단어를 조회합니다.
+        단어 이름을 기준으로 MongoDB에서 단어를 조회합니다.
         """
-        result = await self.db[collection].find_one({"name": item_id})
+        result = await self.db[collection].find_one({"word": word})
         if result:
             result["_id"] = str(result["_id"])  # ObjectId를 문자열로 변환
         return result
     
     async def get_item_by_username(self, collection: str, username: str) -> list:
         """
-        ID를 기준으로 MongoDB에서 단어를 조회합니다.
+        사용자 이름을 기준으로 MongoDB에서 단어를 조회합니다.
         """
         result = await self.db[collection].find({"username": username}).to_list(length=None)
         if result:

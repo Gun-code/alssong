@@ -12,11 +12,11 @@ class WordService:
         """
         return await self.repository.create_item("items", data)
 
-    async def get_item_by_name(self, item_id: str) -> dict:
+    async def get_item_by_word(self, word: str) -> dict:
         """
         단어 이름을 기준으로 항목을 조회합니다.
         """
-        return await self.repository.get_item_by_name("items", item_id)
+        return await self.repository.get_item_by_word("items", word)
     
     async def get_item_by_username(self, username: str) -> list:
         """
