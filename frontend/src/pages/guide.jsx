@@ -55,10 +55,8 @@ const Guide = () => {
         </Link> 
         </div>
       </div>
-
-      <div className="mascot">{/* 여우 마스코트 이미지 */}</div>
     </div>
   );
 };
-// 컴포넌트를 export default로 내보내기
+
 export default Guide;

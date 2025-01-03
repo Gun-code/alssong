@@ -65,10 +65,16 @@ function Modal({ isOpen, onClose }) {
                     <h2>나랑 더 놀까?</h2>
                     <input type="hidden" name="stack" value={stack} />
                     <div className="star-counter">
-                        {Array(stack).fill().map((_, i) => (
-                            <span key={i} className="star">⭐️</span>
-                        ))}
-                    </div>
+                    {Array(stack).fill().map((_, i) => (
+                        <span 
+                            key={i} 
+                            className="star"
+                            style={{ animationDelay: `${i * 0.1}s` }}  // 각 별마다 딜레이 추가
+                        >
+                            ⭐️
+                        </span>
+                    ))}
+                </div>
                     <div className="next-modal-content">
                         <button className="next-modal-btn">응!</button>
                         <button className="next-modal-btn">그만놀래!</button>
