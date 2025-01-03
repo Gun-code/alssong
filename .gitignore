@@ -1,0 +1,11 @@
+backend/ram_plus_swin_large_14m.pth
+backend/__pycache__/main.cpython-312.pyc
+backend/app/routers/__pycache__/audio.cpython-312.pyc
+backend/app/routers/__pycache__/objectDetection.cpython-312.pyc
+backend/app/routers/__pycache__/similarity.cpython-312.pyc
+backend/app/routers/__pycache__/textToVoice.cpython-312.pyc
+backend/app/routers/__pycache__/translation.cpython-312.pyc
+backend/app/services/__pycache__/objectDetection.cpython-312.pyc
+backend/app/services/__pycache__/similarity.cpython-312.pyc
+backend/app/services/__pycache__/textToVoice.cpython-312.pyc
+backend/app/services/__pycache__/translation.cpython-312.pyc
