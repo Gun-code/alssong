@@ -9,9 +9,16 @@ import GuideIcon from '../images/guide.png';
 import CameraIcon from '../images/Cam.png';
 import AlbumIcon from '../images/elbum.png';
 import MainBar from '../images/MAIN-BAR.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function MyCard() {
+    const navigate = useNavigate();  // useNavigate 훅 사용
+    const handleImageClick = () => {
+        navigate('/card');  // card 페이지로 이동
+    };
+
+    
+
     return (
         <div className="page">
             <div className="main">
@@ -24,21 +31,47 @@ function MyCard() {
                         </select>
                     </div>
                     <div class="container">
-                    <img src={Myelbum} alt="myelbum" className="Logo1" />
+                    <img 
+                    src={Myelbum} 
+                    alt="myelbum" 
+                    className="MyCard_Image1" 
+                    onClick={handleImageClick}
+                    style={{ cursor: 'pointer' }}  // 마우스 오버시 포인터 커서 표시
+                />
 
                     <div className="TextBox1">
                         <h2></h2>
                         내 카드
                     </div>
 
+                    <div className='container_of_MyCard_Image1'>
+                        <div className="container_of_MyCard_Image1-item">
+                            <Link to="./card"><img src={Myelbum} alt="card" className="container_of_MyCard_Image1-item" /></Link>
+                        </div> 
+
+                    </div>
+
                         
-                    <img src={RandomImg} alt="randomimg" className="Logo2" />
+                    <img 
+                    src={RandomImg} 
+                    alt="randomimg" 
+                    className="MyCard_Image2" 
+                    onClick={handleImageClick}
+                    style={{ cursor: 'pointer' }}  // 마우스 오버시 포인터 커서 표시
+                />
+
                     <div className="TextBox2">
                         <h2></h2>
                         랜덤 카드
                     </div>
 
-                    <img src={QuestionMark} alt="questionmark" className="Logo2" />
+                    <img 
+                    src={QuestionMark} 
+                    alt="questionmark" 
+                    className="MyCard_Image2" 
+                    onClick={handleImageClick}
+                    style={{ cursor: 'pointer' }}  // 마우스 오버시 포인터 커서 표시
+                />
 
                     
                     </div>
@@ -49,9 +82,10 @@ function MyCard() {
             {/* ------------------------------------------------------------------------------------------------- */}
             <div className="underBar-container">
                 <div className="underBar-item">
-                    <Link to="./guide.jsx"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
-                    <Link to="./camera.jsx"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
-                    <Link to="./card.jsx"><img src={AlbumIcon} alt="album" className="under-item" /></Link>
+                    <Link to="./guide"><img src={GuideIcon} alt="guide" className="under-item" /></Link>
+                    <Link to="./camera"><img src={CameraIcon} alt="Camera" className="under-item" /></Link>
+                    <Link to="."><img src={AlbumIcon} alt="album" className="under-item" /></Link>
+                    
                 </div>
                 <img src={MainBar} alt="MainBar" className="underbar" />
             </div>

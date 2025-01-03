@@ -32,7 +32,36 @@
     filter: brightness(60%);  /* 70%는 조절 가능 (0% ~ 100%) */
 }
 
-.Logo1 {
+.Logo {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+
+.LogoCh {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+.LogoJp {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+
+.MyCard_Image1 {
     position: absolute;
     top: 40%;
     left: 30%;
@@ -69,7 +98,7 @@
 }  
 
 
-.Logo2 {
+.MyCard_Image2 {
     position: absolute;
     top: 40%;
     left: 70%;
