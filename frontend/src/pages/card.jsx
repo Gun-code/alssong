@@ -1,4 +1,4 @@
-// Card.jsx
+// src/pages/card.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -14,10 +14,7 @@ import resetBtn from '../images/ResetBtn.jpg';
 import recordIcon from '../images/record.svg';
 
 // SimpleAudioRecorder 임포트
-import SimpleAudioRecorder from '../pages/simpleAudioRecorder';
-
-// 모달 임포트
-import Modal from './modal';
+import SimpleAudioRecorder from './simpleAudioRecorder';
 
 const Card = () => {
   const location = useLocation();
@@ -31,6 +28,19 @@ const Card = () => {
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
   const [isRetaking, setIsRetaking] = useState(false);
 
+  // 객체 감지 결과 (영어) & 번역 결과 (한국어)
+  const [detectedObjectEn, setDetectedObjectEn] = useState('');
+  const [detectedObjectKo, setDetectedObjectKo] = useState('');
+
+  // TTS 재생용 URL (영어, 한국어)
+  const [englishTtsUrl, setEnglishTtsUrl] = useState(null);
+  const [koreanTtsUrl, setKoreanTtsUrl] = useState(null);
+
+  // 유사도 체크 결과
+  const [similarityScore, setSimilarityScore] = useState(null);
+  const [similarityModalOpen, setSimilarityModalOpen] = useState(false);
+  const [similarityMessage, setSimilarityMessage] = useState('');
+
   // location.state.photo(파일) 있으면 이미지 세팅
   useEffect(() => {
     if (location.state && location.state.photo) {
@@ -43,27 +53,14 @@ const Card = () => {
   // 페이지 로드 시 데스크탑이면 웹캠 모달 열기
   useEffect(() => {
     if (!isMobile) {
-      // 만약 openCamera: true 전달받았다면
       if (location.state && location.state.openCamera) {
         setIsRetaking(true);
       }
     }
-  }, [location.state, isMobile]);
+  }, [location.state]); // isMobile 제거
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
-
-  // 모달 ==================================================
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-
-  // 이미지 선택 핸들러 (Card에서 직접 업로드 시)
-
+  // 이미지 선택 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -72,33 +69,72 @@ const Card = () => {
     }
   };
 
-  // 이미지 업로드 핸들러
+  // ------------------------------------------
+  // (1) 이미지 업로드 & 객체 감지 & 번역 & TTS
+  // ------------------------------------------
   const handleUploadImage = async () => {
     if (!selectedImage) return;
 
-    const formData = new FormData();
-    formData.append('file', selectedImage);
-
     try {
-      const response = await axios.post('http://192.168.1.236:8000/upload/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('이미지 업로드 성공:', response.data);
+      // 1) 객체 감지
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+
+      const detectResponse = await axios.post(
+        'http://localhost:8000/detect/', // 본인 서버 주소/포트 확인
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      const detectedEn = detectResponse.data.detected_object || 'unknown';
+      console.log('객체 감지 결과(영어):', detectedEn);
+      setDetectedObjectEn(detectedEn);
+
+      // 2) 영어 → 한국어 번역 (백엔드 번역 API 호출)
+      const translateResponse = await axios.get(
+        `http://localhost:8000/translate/?text=${encodeURIComponent(detectedEn)}&lang=ko`
+      );
+      const koWord = translateResponse.data.translated_text;
+      console.log('번역 결과(한국어):', koWord);
+      setDetectedObjectKo(koWord);
+
+      // 3) 영어, 한국어 각각 TTS 파일 받기
+      //   (응답은 blob 형태 - gTTS가 생성한 mp3)
+      //   * 영어
+      const enTtsRes = await axios.get(
+        `http://localhost:8000/tts?text=${encodeURIComponent(
+          detectedEn
+        )}&lang=en&file_name=en.mp3`,
+        { responseType: 'blob' }
+      );
+      const enTtsBlobUrl = URL.createObjectURL(enTtsRes.data);
+      setEnglishTtsUrl(enTtsBlobUrl);
+
+      //   * 한국어
+      const koTtsRes = await axios.get(
+        `http://localhost:8000/tts?text=${encodeURIComponent(
+          koWord
+        )}&lang=ko&file_name=ko.mp3`,
+        { responseType: 'blob' }
+      );
+      const koTtsBlobUrl = URL.createObjectURL(koTtsRes.data);
+      setKoreanTtsUrl(koTtsBlobUrl);
+
+      alert('객체 감지 + 번역 + TTS 완료!');
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
+      console.error('이미지 업로드/객체 감지/TTS 실패:', error);
+      alert('업로드/감지/TTS 중 오류가 발생했습니다.');
     }
   };
 
-  // 이미지 재촬영(재업로드) 핸들러 (데스크탑)
+  // ------------------------------------------
+  // (2) "다시찍기" (웹캠)
+  // ------------------------------------------
   const handleRetake = () => {
     if (!isMobile) {
       setIsRetaking(true);
     }
   };
 
-  // 웹캠에서 사진 캡처 (데스크탑)
   const capture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
@@ -113,34 +149,101 @@ const Card = () => {
     }
   };
 
-  // 오디오 업로드 핸들러
-  const handleUploadAudio = async () => {
-    if (!audioBlob) return;
-
-    const formData = new FormData();
-    formData.append('file', audioBlob, 'recorded_audio.webm');
-
-    try {
-      const response = await axios.post('http://192.168.1.236:8000/upload-audio/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('오디오 업로드 성공:', response.data);
-    } catch (error) {
-      console.error('오디오 업로드 실패:', error);
-    }
-  };
-
-  // 오디오 녹음 완료 시
+  // ------------------------------------------
+  // (3) 음성 녹음 & 업로드 + 유사도 체크
+  // ------------------------------------------
   const handleAudioStop = (blob) => {
     setAudioBlob(blob);
     console.log('녹음 완료:', blob);
   };
 
-  // 오디오 모달 열기/닫기
+  // 새로운 "확인 하기" 버튼 핸들러 추가
+  const handleConfirmAudio = async () => {
+    if (!audioBlob) {
+      alert('녹음된 오디오가 없습니다.');
+      return;
+    }
+
+    try {
+      // 오디오 업로드
+      const formData = new FormData();
+      formData.append('file', audioBlob, 'recorded_audio.webm');
+
+      const res = await axios.post('http://localhost:8000/upload-audio/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      console.log('오디오 업로드 성공:', res.data);
+      alert('오디오 업로드 완료! 유사도 체크 중입니다.');
+
+      // 유사도 체크 자동 수행
+      await handleCheckSimilarity(audioBlob);
+    } catch (error) {
+      console.error('오디오 업로드 실패:', error);
+      alert('오디오 업로드 실패');
+    }
+  };
+
   const openAudioModal = () => setIsAudioModalOpen(true);
   const closeAudioModal = () => setIsAudioModalOpen(false);
+
+  // ------------------------------------------
+  // (4) 영어 TTS 음성과 사용자 음성 similarity 체크
+  // ------------------------------------------
+  const handleCheckSimilarity = async (uploadedBlob = null) => {
+    if (!englishTtsUrl || (!audioBlob && !uploadedBlob)) {
+      alert('영어 TTS 음성 또는 사용자 음성이 준비되지 않았습니다.');
+      return;
+    }
+
+    try {
+      // 영어 TTS 음성을 Blob으로 가져오기
+      const ttsBlob = await fetch(englishTtsUrl).then((r) => r.blob());
+      const userBlob = uploadedBlob || audioBlob;
+
+      // FormData 생성
+      const formData = new FormData();
+      formData.append('file1', ttsBlob, 'tts_en.mp3'); // 필드 이름: file1
+      formData.append('file2', userBlob, 'recorded_audio.webm'); // 필드 이름: file2
+
+      // Axios 요청
+      console.log("Sending FormData:", {
+        file1: 'tts_en.mp3',
+        file2: 'recorded_audio.webm'
+      });
+      const response = await axios.post('http://localhost:8000/similarity/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      console.log("Similarity response:", response.data);
+
+      const similarity = response.data.similarity;
+      setSimilarityScore(similarity);
+
+      if (similarity > 0.5) { // 임계값 설정 (예: 0.5)
+        setSimilarityMessage('참 잘했어요~');
+      } else {
+        setSimilarityMessage('다시 해보세요~');
+      }
+
+      setSimilarityModalOpen(true);
+    } catch (error) {
+      console.error('유사도 체크 실패:', error);
+      alert('유사도 체크 실패');
+    }
+  };
+
+  const handleCloseSimilarityModal = () => {
+    setSimilarityModalOpen(false);
+  };
+
+  // ------------------------------------------
+  // (5) TTS 재생 (영어 / 한국어)
+  // ------------------------------------------
+  const playAudio = (audioUrl) => {
+    if (!audioUrl) return;
+    const audio = new Audio(audioUrl);
+    audio.play().catch((err) => console.error('오디오 재생 오류', err));
+  };
 
   return (
     <div>
@@ -155,7 +258,7 @@ const Card = () => {
       <div
         className="image-container"
         onClick={() => {
-          // Card에서 직접 파일 선택도 가능
+          // Card에서 직접 파일 선택
           if (!isRetaking && fileInputRef.current) {
             fileInputRef.current.click();
           }
@@ -164,7 +267,6 @@ const Card = () => {
         {previewURL ? (
           <>
             <img className="main-img" src={previewURL} alt="Uploaded" />
-            {/* 데스크탑에서만 다시 찍기 버튼 표시 */}
             {!isMobile && (
               <div className="retake-btn-container">
                 <button
@@ -200,40 +302,68 @@ const Card = () => {
       {/* 이미지 업로드 버튼 */}
       {selectedImage && (
         <button className="upload-btn" onClick={handleUploadImage}>
-          업로드
+          이미지 업로드 → 객체 감지 + 번역 + TTS
         </button>
       )}
 
-      {/* 녹음 버튼 */}
-      <div className="result-container">
-        
+      {/* 감지된 결과 & TTS 플레이 영역 */}
+      {/* 예: apple / 사과  */}
+      {detectedObjectEn && (
+        <div className="result-container">
+          {/* 영어 단어 & 재생 버튼 */}
+          <span className="object-en">{detectedObjectEn}</span>
+          <button onClick={() => playAudio(englishTtsUrl)} className="tts-btn">
+            스피커(영어)
+          </button>
 
-        <span>알쏭달쏭</span> {/* response text data(Kor) */}
-        <img src={recordIcon} alt="마이크" onClick={openModal} className='record-icon'/>
-        <span>RSSONG</span> {/* response text data(eng/jp/ch) */}
-      </div>
+          {/* 녹음 버튼 */}
+          <button onClick={openAudioModal} className="record-btn">
+            <img src={recordIcon} alt="마이크" />
+            녹음
+          </button>
 
-      {/* Modal 컴포넌트 */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+          {/* 한국어 단어 & 재생 버튼 */}
+          <span className="object-ko">{detectedObjectKo}</span>
+          <button onClick={() => playAudio(koreanTtsUrl)} className="tts-btn">
+            스피커(한국어)
+          </button>
+        </div>
+      )}
 
-      {/* 오디오 녹음 모달 */}
+      {/* (A) 오디오 녹음 모달 */}
       {isAudioModalOpen && (
         <div className="modal" onClick={closeAudioModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-modal" onClick={closeAudioModal}>&times;</span>
+            <span className="close-modal" onClick={closeAudioModal}>
+              &times;
+            </span>
             <h2>오디오 녹음</h2>
             <SimpleAudioRecorder onStop={handleAudioStop} />
             {audioBlob && (
-              <>
+              <div className="audio-controls">
                 <audio src={URL.createObjectURL(audioBlob)} controls />
-                <button className="upload-audio-btn" onClick={handleUploadAudio}>
-                  오디오 업로드
+                <button
+                  className="confirm-audio-btn"
+                  onClick={handleConfirmAudio}
+                >
+                  확인 하기
                 </button>
-              </>
+              </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* (B) 유사도 결과 모달 */}
+      {similarityModalOpen && (
+        <div className="modal" onClick={handleCloseSimilarityModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-modal" onClick={handleCloseSimilarityModal}>
+              &times;
+            </span>
+            <h2>유사도 결과</h2>
+            <p>유사도: {similarityScore !== null ? similarityScore.toFixed(2) : '계산 중...'}</p>
+            <p>{similarityMessage}</p>
           </div>
         </div>
       )}
@@ -242,16 +372,15 @@ const Card = () => {
       {isRetaking && !isMobile && (
         <div className="modal" onClick={() => setIsRetaking(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-modal" onClick={() => setIsRetaking(false)}>&times;</span>
-            <h2>이미지 재촬영</h2>
+            <span className="close-modal" onClick={() => setIsRetaking(false)}>
+              &times;
+            </span>
+            <h2>이미지 촬영</h2>
             <Webcam
               audio={false}
               ref={webcamRef}
               screenshotFormat="image/jpeg"
-              videoConstraints={{
-                facingMode: 'user',
-              }}
-              style={{ width: '100%', borderRadius: '10px' }}
+              videoConstraints={{ facingMode: 'user' }}
             />
             <button onClick={capture} className="upload-btn" style={{ marginTop: '10px' }}>
               촬영
