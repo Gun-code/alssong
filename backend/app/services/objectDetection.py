@@ -10,8 +10,11 @@ import os
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # 모델 로드
+from pathlib import Path
 
-model_path = "C:/Users/201-19/Desktop/alssongdalssong/backend/ram_plus_swin_large_14m.pth"
+# 현재 파일의 디렉터리를 기준으로 모델 경로 설정
+BASE_DIR = Path(__file__).resolve().parent.parent  # 현재 파일의 상위 디렉터리 (프로젝트 루트)
+model_path  = str(BASE_DIR / "aimodel" / "ram_plus_swin_large_14m.pth")
 
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"모델 파일을 찾을 수 없습니다: {model_path}")

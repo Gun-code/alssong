@@ -24,6 +24,3 @@ class WordService:
         """
         return await self.repository.update_item("items", item_id, data)
 
-        항목을 삭제합니다.
-        """
-        return await self.repository.delete_item("items", item_id)
