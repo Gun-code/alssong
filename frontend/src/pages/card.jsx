@@ -12,11 +12,8 @@ import logo from '../images/logo.svg';
 import resetBtn from '../images/ResetBtn.jpg';
 import recordIcon from '../images/record.svg';
 
-// SimpleAudioRecorder 임포트
-import SimpleAudioRecorder from './simpleAudioRecorder';
-
 // 환경 변수 사용
-  const BACKEND_URL = isMobile
+const BACKEND_URL = isMobile
   ? 'http://192.168.0.129:8000'
   : 'http://localhost:8000';
 
@@ -49,6 +46,11 @@ const Card = () => {
   const videoConstraints = {
     facingMode: 'environment', // 후면 카메라 사용
   };
+
+  // Recorder States
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
 
   // location.state.photo(파일) 있으면 이미지 세팅
   useEffect(() => {
@@ -275,6 +277,38 @@ const Card = () => {
     audio.play().catch((err) => console.error('오디오 재생 오류', err));
   };
 
+  // ------------------------------------------
+  // (6) 녹음 시작 및 중지 핸들러
+  // ------------------------------------------
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current.start();
+      setRecording(true);
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        setAudioBlob(audioBlob); // 부모에게 오디오 데이터 전달
+        audioChunksRef.current = [];
+      };
+    } catch (error) {
+      console.error('녹음 시작 실패:', error);
+      alert('오디오 녹음을 시작할 수 없습니다. 마이크 접근을 허용해주세요.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
+    }
+  };
+
   return (
     <div>
       {/* 홈 아이콘 */}
@@ -367,7 +401,11 @@ const Card = () => {
               &times;
             </span>
             <h2>오디오 녹음</h2>
-            <SimpleAudioRecorder onStop={handleAudioStop} />
+            <div className="simple-audio-recorder">
+              <button onClick={recording ? stopRecording : startRecording} className="record-control-btn">
+                {recording ? '녹음 중지' : '녹음 시작'}
+              </button>
+            </div>
             {audioBlob && (
               <div className="audio-controls">
                 <audio src={URL.createObjectURL(audioBlob)} controls />

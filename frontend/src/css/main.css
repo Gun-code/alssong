@@ -2,8 +2,8 @@
 
 /* .page 스타일 */
 .page {
-    height: 834px;
-    width: 1194px;
+    height: 100vh;
+    width: 100vw;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@
 
 .background-container {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100%;
 }
 
@@ -111,7 +111,6 @@
 .underBar-container {
     position: relative;
     height: 50%;
-    bottom: 10%;
 }
 
 /* 하단 바 이미지 */
