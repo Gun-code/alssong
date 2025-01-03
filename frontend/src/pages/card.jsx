@@ -1,4 +1,3 @@
-// src/pages/card.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -15,6 +14,11 @@ import recordIcon from '../images/record.svg';
 
 // SimpleAudioRecorder 임포트
 import SimpleAudioRecorder from './simpleAudioRecorder';
+
+// 환경 변수 사용
+  const BACKEND_URL = isMobile
+  ? 'http://192.168.0.129:8000'
+  : 'http://localhost:8000';
 
 const Card = () => {
   const location = useLocation();
@@ -41,6 +45,11 @@ const Card = () => {
   const [similarityModalOpen, setSimilarityModalOpen] = useState(false);
   const [similarityMessage, setSimilarityMessage] = useState('');
 
+  // Define videoConstraints
+  const videoConstraints = {
+    facingMode: 'environment', // 후면 카메라 사용
+  };
+
   // location.state.photo(파일) 있으면 이미지 세팅
   useEffect(() => {
     if (location.state && location.state.photo) {
@@ -58,7 +67,6 @@ const Card = () => {
       }
     }
   }, [location.state]); // isMobile 제거
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   // 이미지 선택 핸들러
   const handleImageChange = (e) => {
@@ -81,7 +89,7 @@ const Card = () => {
       formData.append('file', selectedImage);
 
       const detectResponse = await axios.post(
-        'http://localhost:8000/detect/', // 본인 서버 주소/포트 확인
+        `${BACKEND_URL}/detect/`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -91,7 +99,13 @@ const Card = () => {
 
       // 2) 영어 → 한국어 번역 (백엔드 번역 API 호출)
       const translateResponse = await axios.get(
-        `http://localhost:8000/translate/?text=${encodeURIComponent(detectedEn)}&lang=ko`
+        `${BACKEND_URL}/translate/`,
+        {
+          params: {
+            text: detectedEn,
+            lang: 'ko',
+          },
+        }
       );
       const koWord = translateResponse.data.translated_text;
       console.log('번역 결과(한국어):', koWord);
@@ -101,20 +115,30 @@ const Card = () => {
       //   (응답은 blob 형태 - gTTS가 생성한 mp3)
       //   * 영어
       const enTtsRes = await axios.get(
-        `http://localhost:8000/tts?text=${encodeURIComponent(
-          detectedEn
-        )}&lang=en&file_name=en.mp3`,
-        { responseType: 'blob' }
+        `${BACKEND_URL}/tts/`,
+        {
+          params: {
+            text: detectedEn,
+            lang: 'en',
+            file_name: 'en.mp3',
+          },
+          responseType: 'blob',
+        }
       );
       const enTtsBlobUrl = URL.createObjectURL(enTtsRes.data);
       setEnglishTtsUrl(enTtsBlobUrl);
 
       //   * 한국어
       const koTtsRes = await axios.get(
-        `http://localhost:8000/tts?text=${encodeURIComponent(
-          koWord
-        )}&lang=ko&file_name=ko.mp3`,
-        { responseType: 'blob' }
+        `${BACKEND_URL}/tts/`,
+        {
+          params: {
+            text: koWord,
+            lang: 'ko',
+            file_name: 'ko.mp3',
+          },
+          responseType: 'blob',
+        }
       );
       const koTtsBlobUrl = URL.createObjectURL(koTtsRes.data);
       setKoreanTtsUrl(koTtsBlobUrl);
@@ -127,11 +151,17 @@ const Card = () => {
   };
 
   // ------------------------------------------
-  // (2) "다시찍기" (웹캠)
+  // (2) "다시찍기" (웹캠 또는 모바일 파일 선택)
   // ------------------------------------------
   const handleRetake = () => {
     if (!isMobile) {
       setIsRetaking(true);
+    } else {
+      // 모바일에서는 파일 입력을 다시 열기 전에 기존 값을 초기화
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null; // 기존 파일 초기화
+        fileInputRef.current.click(); // 내장 카메라 앱 실행
+      }
     }
   };
 
@@ -169,7 +199,7 @@ const Card = () => {
       const formData = new FormData();
       formData.append('file', audioBlob, 'recorded_audio.webm');
 
-      const res = await axios.post('http://localhost:8000/upload-audio/', formData, {
+      const res = await axios.post(`${BACKEND_URL}/upload-audio/`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       console.log('오디오 업로드 성공:', res.data);
@@ -210,7 +240,7 @@ const Card = () => {
         file1: 'tts_en.mp3',
         file2: 'recorded_audio.webm'
       });
-      const response = await axios.post('http://localhost:8000/similarity/', formData, {
+      const response = await axios.post(`${BACKEND_URL}/similarity/`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -219,7 +249,7 @@ const Card = () => {
       const similarity = response.data.similarity;
       setSimilarityScore(similarity);
 
-      if (similarity > 0.5) { // 임계값 설정 (예: 0.5)
+      if (similarity >= 60) { // 임계값 설정 (예: 60)
         setSimilarityMessage('참 잘했어요~');
       } else {
         setSimilarityMessage('다시 해보세요~');
@@ -267,20 +297,19 @@ const Card = () => {
         {previewURL ? (
           <>
             <img className="main-img" src={previewURL} alt="Uploaded" />
-            {!isMobile && (
-              <div className="retake-btn-container">
-                <button
-                  className="retake-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRetake();
-                  }}
-                >
-                  <img src={resetBtn} alt="다시찍기" />
-                  다시찍기
-                </button>
-              </div>
-            )}
+            {/* 다시찍기 버튼을 모바일과 데스크탑 모두에서 표시 */}
+            <div className="retake-btn-container">
+              <button
+                className="retake-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRetake();
+                }}
+              >
+                <img src={resetBtn} alt="다시찍기" />
+                다시찍기
+              </button>
+            </div>
           </>
         ) : (
           <>
@@ -380,7 +409,7 @@ const Card = () => {
               audio={false}
               ref={webcamRef}
               screenshotFormat="image/jpeg"
-              videoConstraints={{ facingMode: 'user' }}
+              videoConstraints={videoConstraints} // 별도의 변수 사용
             />
             <button onClick={capture} className="upload-btn" style={{ marginTop: '10px' }}>
               촬영

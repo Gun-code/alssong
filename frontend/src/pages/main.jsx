@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import '../css/main.css';
 import Logo from '../images/LOGO.png';
 import LogoCh from '../images/알쏭달쏭 중국어.png';  // 중국어 로고
@@ -8,7 +7,9 @@ import GuideIcon from '../images/guide.png';
 import CameraIcon from '../images/Cam.png';
 import AlbumIcon from '../images/elbum.png';
 import MainBar from '../images/MAIN-BAR.png';
-import { Link } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
+import React, { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function MainPage() {
     

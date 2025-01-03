@@ -10,6 +10,7 @@ import os
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # 모델 로드
+
 model_path = "C:/Users/201-19/Desktop/alssongdalssong/backend/ram_plus_swin_large_14m.pth"
 
 if not os.path.exists(model_path):
