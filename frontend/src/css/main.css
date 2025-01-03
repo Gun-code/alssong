@@ -42,6 +42,74 @@
     z-index: 3;
 }
 
+.LogoCh {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+.LogoJp {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+
+.MyCard_Image1 {
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+
+/* 이미지 아래의 텍스트 */
+.TextBox1 {
+    position: absolute;
+    top: 40%;
+    left: 26%;
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: 0 0 2px white;
+    line-height: 9.5;
+    color: white;
+    z-index: 2
+    
+  }
+
+.TextBox2 {
+    position: absolute;
+    top: 40%;
+    right: 26%;
+    font-size: 30px;
+    font-weight: bold;
+    text-shadow: 0 0 2px white;
+    line-height: 9.5;
+    color: white;
+    z-index: 2
+}  
+
+
+.MyCard_Image2 {
+    position: absolute;
+    top: 40%;
+    left: 70%;
+    transform: translate(-50%, -50%);
+    max-width: 40%;
+    height: auto;
+    z-index: 3;
+}
+
+
+
 .language-selector {
     position: absolute;
     top: 30px;
