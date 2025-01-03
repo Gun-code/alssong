@@ -10,9 +10,11 @@ import MainBar from '../images/MAIN-BAR.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 
-function MainPage() {    const navigate = useNavigate();
-    const [selectedPhoto, setSelectedPhoto] = useState(null);
-    const fileInputRef = useRef(null);
+function MainPage() {
+  
+  const navigate = useNavigate();
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const fileInputRef = useRef(null);
 
     // 모바일에서 카메라 아이콘을 클릭했을 때 호출
     const handleMobileCameraClick = () => {

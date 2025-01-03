@@ -37,7 +37,7 @@ const SimpleAudioRecorder = ({ onStop }) => {
 
   return (
     <div className="simple-audio-recorder">
-      <button onClick={recording ? stopRecording : startRecording}>
+      <button onClick={recording ? stopRecording : startRecording} className="record-control-btn">
         {recording ? '녹음 중지' : '녹음 시작'}
       </button>
     </div>

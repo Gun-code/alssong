@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+torch
+torchvision
+transformers
+gTTS
+librosa
+numpy
+scikit-learn
+pydantic
