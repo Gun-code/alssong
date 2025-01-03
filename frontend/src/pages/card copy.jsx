@@ -242,4 +242,65 @@ const Card = () => {
   );
 };
 
+
+
 export default Card;
+
+function SimpleAudioRecorder() {
+  const [recording, setRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);  // Blob 저장을 위한 state 추가
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current.start();
+      setRecording(true);
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        setAudioBlob(blob);  // Blob 저장
+        audioChunksRef.current = [];
+      };
+    } catch (error) {
+      console.error('녹음 시작 실패:', error);
+      alert('오디오 녹음을 시작할 수 없습니다. 마이크 접근을 허용해주세요.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      setRecording(false);
+    }
+  };
+
+  return (
+    <div className="simple-audio-recorder">
+      <button
+        onClick={recording ? stopRecording : startRecording}
+        className={`record-control-btn ${recording ? 'recording' : ''}`}
+      >
+        <img
+          src={recording ? recordStop : recordStart}
+          alt={recording ? '녹음 중지' : '녹음 시작'}
+          className="record-icon"
+        />
+      </button>
+
+      {/* 녹음된 오디오가 있을 경우 표시 (선택적) */}
+      {audioBlob && (
+        <div>
+          <p>녹음이 완료되었습니다!</p>
+        </div>
+      )}
+    </div>
+  );
+}

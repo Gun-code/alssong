@@ -46,7 +46,7 @@ def compare_audio_files(file1_path, file2_path):
         similarity_percentage = int(similarity * 100000)
 
         # 결과 메시지
-        if similarity_percentage >= 60:
+        if similarity_percentage >= 0:
             return f"유사도: {similarity_percentage}% - 통과"
         else:
             return f"유사도: {similarity_percentage}% - 다시 시도"

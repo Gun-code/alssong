@@ -16,7 +16,7 @@ app.include_router(dbtest.router)  # dbtest 라우터 추가
 # CORS 설정
 origins = [
     "http://localhost:3000",  # React 개발 서버
-    "http://192.168.0.129:3000",
+    "http://192.168.0.184:3000",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
     "http://localhost:8000/docs/"
@@ -32,4 +32,4 @@ app.add_middleware(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="http://192.168.0.184:3000", port=8000)
