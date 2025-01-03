@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException, APIRouter
 from motor.motor_asyncio import AsyncIOMotorClient
-from app.models.word_model import wordModel
 from app.repository.db_repository import DBRepository
 from app.services.dbtest import WordService
+from app.models.word_model import wordModel
 
 router = APIRouter()
 
