@@ -10,7 +10,7 @@ import os
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # 모델 로드
-model_path = "/Users/yuchan/git/RSSONG/backend/ram_plus_swin_large_14m.pth"
+model_path = "/Users/yuchan/Desktop/github/RSSONG/backend/ram_plus_swin_large_14m.pth"
 
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"모델 파일을 찾을 수 없습니다: {model_path}")

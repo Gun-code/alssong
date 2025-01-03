@@ -15,7 +15,9 @@ app.include_router(translation.router)  # translation 라우터 추가
 # CORS 설정
 origins = [
     "http://localhost:3000",  # React 개발 서버
-    "http://127.0.0.1:3000",
+    "http://192.168.0.129:3000",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
     "http://localhost:8000/docs/"
 ]
 
