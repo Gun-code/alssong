@@ -1,14 +1,3 @@
-backend/ram_plus_swin_large_14m.pth
-backend/__pycache__/main.cpython-312.pyc
-backend/app/routers/__pycache__/audio.cpython-312.pyc
-backend/app/routers/__pycache__/objectDetection.cpython-312.pyc
-backend/app/routers/__pycache__/similarity.cpython-312.pyc
-backend/app/routers/__pycache__/textToVoice.cpython-312.pyc
-backend/app/routers/__pycache__/translation.cpython-312.pyc
-backend/app/services/__pycache__/objectDetection.cpython-312.pyc
-backend/app/services/__pycache__/similarity.cpython-312.pyc
-backend/app/services/__pycache__/textToVoice.cpython-312.pyc
-backend/app/services/__pycache__/translation.cpython-312.pyc
 
 # Python 관련 (FastAPI)
 __pycache__/
@@ -29,6 +18,9 @@ venv/
 env/
 ENV/
 .venv/
+
+# AI 모델
+backend/app/aimodel/ram_plus_swin_large_14m.pth
 
 # 데이터베이스 및 마이그레이션
 *.sqlite3
@@ -85,18 +77,3 @@ coverage/
 # Static 및 Media Files (필요 시)
 staticfiles/
 mediafiles/
-
-backend/app/aimodel/ram_plus_swin_large_14m.pth
-backend/app/repository/__pycache__/db_repository.cpython-312.pyc
-backend/app/repository/__pycache__/db_repository.cpython-312.pyc
-backend/app/routers/__pycache__/audio.cpython-312.pyc
-backend/app/routers/__pycache__/dbtest.cpython-312.pyc
-backend/app/routers/__pycache__/objectDetection.cpython-312.pyc
-backend/app/routers/__pycache__/similarity.cpython-312.pyc
-backend/app/routers/__pycache__/textToVoice.cpython-312.pyc
-backend/app/routers/__pycache__/translation.cpython-312.pyc
-backend/app/services/__pycache__/dbtest.cpython-312.pyc
-backend/app/services/__pycache__/objectDetection.cpython-312.pyc
-backend/app/services/__pycache__/similarity.cpython-312.pyc
-backend/app/services/__pycache__/textToVoice.cpython-312.pyc
-backend/app/services/__pycache__/translation.cpython-312.pyc
