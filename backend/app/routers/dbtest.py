@@ -37,7 +37,7 @@ async def get_word(word: str):
     return item
 
 
-@router.get("/words/{username}")
+@router.get("/wordslist/{username}")
 async def get_itemlist(username: str):
     """
     ID를 기준으로 항목을 조회하는 엔드포인트.
